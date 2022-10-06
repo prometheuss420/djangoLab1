@@ -49,6 +49,14 @@ def register(request):
     context = {'form':form}
     return render(request, 'register.html', context)
 
+def wishlist_ajax(request):
+    context = {
+    'nama': 'Dito Syahputra',
+    'last_login': request.COOKIES['last_login'],
+    }
+    return render(request, "wishlist_ajax.html",context)
+
+
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -69,3 +77,12 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('wishlist:login'))
     response.delete_cookie('last_login')
     return response
+
+def add_wishlist(request):
+    if request.method == 'POST':
+        nama_barang = request.POST.get('nama_barang')
+        harga_barang = request.POST.get('harga_barang')
+        deskripsi = request.POST.get('deskripsi')
+        BarangWishlist.objects.create(nama_barang = nama_barang, harga_barang = harga_barang, deskripsi = deskripsi)
+        response = HttpResponseRedirect(reverse("wishlist:wishlist_ajax"))
+        return response

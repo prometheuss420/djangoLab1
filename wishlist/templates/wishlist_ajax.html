@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+    </script>
+    <script>
+
+        $(document).ready(function() {
+            $.getJSON('/wishlist/json/', function(emp) {
+            for (i = 0; i < emp.length; i++){
+                    $('.barangwishlist').append('<tr><td>'+ emp[i].fields.nama_barang + '</td><td>' + emp[i].fields.harga_barang + '</td><td>' + emp[i].fields.deskripsi + '</td></tr>');
+                }
+            });
+            $("#button_submit").click(function(){
+                $.post("https://localhost:8000/wishlist/ajax/submit"), {nama_barang: $(nama_barang).val(), harga_barang: $(harga_barang).val(), deskripsi: $(deskripsi).val()}
+            })
+        
+        });
+    </script>
+</head>
+
+<h5>Nama: </h5>
+<b>{{nama}}</b>
+
+<table border="2">
+    <thead>
+
+        <tr>
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+        </tr>
+    </thead>
+    <tbody class="barangwishlist">
+    </tbody>
+</table>
+<form method="POST" action="">
+    {% csrf_token %}
+<div style="padding-top: 10px;">
+    <span>Nama Barang : </span>
+    <input type="text" style="width: 500px;" name="nama_barang" id="nama_barang" placeholder="Masukkan nama barang..." class="form-control">
+</div>
+<div style="padding-top: 10px;">
+    
+    <span>Harga Barang : </span>
+    <input type="text" style="width: 500px;" name="harga_barang" id="harga_barang" placeholder="Masukkan harga barang..." class="form-control">
+</div>
+<div style="padding-top: 10px;">
+    <span>Deskripsi : </span>
+    <input type="text" style="width: 500px;" name="deskripsi" id="deskripsi" placeholder="Masukkan deskripsi...." class="form-control">
+
+</div>
+
+<div>
+    <input class="btn login_btn" id="button_submit" type="submit" value="Add Wishlist">
+</div>
+</form>
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+
+{% endblock content %}
